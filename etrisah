@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ƏtriŞah Düyü - Onlayn Sifariş</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#f4f6f4}
+header{background:#2e7d32;color:white;padding:20px;text-align:center}
+.container{padding:20px}
+.product{background:white;padding:15px;margin:10px 0;border-radius:10px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
+button{padding:10px 15px;background:#2e7d32;color:white;border:none;border-radius:6px;cursor:pointer}
+button:hover{background:#1b5e20}
+input,select{padding:10px;margin:5px 0;width:100%;border-radius:6px;border:1px solid #ccc}
+.cart{background:#fff;padding:15px;border-radius:10px;margin-top:20px}
+.total{font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>ƏtriŞah Düyü</h1>
+<p>Onlayn Sifariş Sistemi</p>
+</header>
+
+<div class="container">
+
+<h2>Məhsullar</h2>
+
+<input type="text" id="search" onkeyup="searchProduct()" placeholder="Məhsul axtar...">
+
+<div id="products">
+
+<div class="product">
+<h3>Premium Ağ Düyü</h3>
+<p>Qiymət: 3.50 AZN</p>
+<button onclick="addToCart('Premium Ağ Düyü',3.5)">Səbətə at</button>
+</div>
+
+<div class="product">
+<h3>Uzun Dənəli Düyü</h3>
+<p>Qiymət: 3.00 AZN</p>
+<button onclick="addToCart('Uzun Dənəli Düyü',3)">Səbətə at</button>
+</div>
+
+<div class="product">
+<h3>Kənd Düyüsü</h3>
+<p>Qiymət: 2.80 AZN</p>
+<button onclick="addToCart('Kənd Düyüsü',2.8)">Səbətə at</button>
+</div>
+
+</div>
+
+<div class="cart">
+<h2>Səbət</h2>
+<ul id="cartList"></ul>
+<p class="total">Ümumi: <span id="total">0</span> AZN</p>
+
+<h3>Çatdırılma Məlumatı</h3>
+
+<input type="text" id="name" placeholder="Ad Soyad">
+<input type="text" id="phone" placeholder="Telefon">
+<input type="text" id="address" placeholder="Ünvan">
+
+<select id="region">
+<option value="">Rayon seçin</option>
+<option>Bakı</option>
+<option>Gəncə</option>
+<option>Sumqayıt</option>
+<option>Digər</option>
+</select>
+
+<button onclick="sendOrder()">Sifarişi Göndər (WhatsApp)</button>
+
+</div>
+
+</div>
+
+<script>
+
+let cart=[];
+let total=0;
+
+function addToCart(name,price){
+cart.push({name,price});
+total+=price;
+updateCart();
+}
+
+function updateCart(){
+let list=document.getElementById("cartList");
+list.innerHTML="";
+cart.forEach(item=>{
+let li=document.createElement("li");
+li.textContent=item.name+" - "+item.price+" AZN";
+list.appendChild(li);
+});
+document.getElementById("total").textContent=total.toFixed(2);
+}
+
+function searchProduct(){
+let input=document.getElementById("search").value.toLowerCase();
+let products=document.getElementsByClassName("product");
+for(let i=0;i<products.length;i++){
+let title=products[i].getElementsByTagName("h3")[0].innerText.toLowerCase();
+products[i].style.display=title.includes(input)?"":"none";
+}
+}
+
+function sendOrder(){
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let address=document.getElementById("address").value;
+let region=document.getElementById("region").value;
+
+if(cart.length==0){alert("Səbət boşdur!");return;}
+
+let message="Yeni Sifariş:%0A";
+message+="Ad: "+name+"%0A";
+message+="Telefon: "+phone+"%0A";
+message+="Rayon: "+region+"%0A";
+message+="Ünvan: "+address+"%0A";
+message+="Ümumi: "+total.toFixed(2)+" AZN%0A";
+message+="Məhsullar:%0A";
+
+cart.forEach(item=>{
+message+=item.name+" - "+item.price+" AZN%0A";
+});
+
+let whatsappNumber="994702090344";
+window.open("https://wa.me/"+whatsappNumber+"?text="+message,"_blank");
+}
+
+</script>
+
+</body>
+</html>
